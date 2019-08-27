@@ -25,7 +25,7 @@ CFLAGS += -msoft-float -mno-string -mno-multiple -mno-vsx -mno-altivec -mlittle-
 CFLAGS += -Os
 CFLAGS += -fdata-sections -ffunction-sections
 
-LDFLAGS = -T powerpc.lds
+LDFLAGS = -N -T powerpc.lds
 
 LIBS =
 
