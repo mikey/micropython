@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#define STACK_TOP 0x60000
+
 #define FIXUP_ENDIAN						   \
 	tdi   0,0,0x48;	  /* Reverse endian of b . + 8		*/ \
 	b     191f;	  /* Skip trampoline if endian is good	*/ \
@@ -46,9 +48,11 @@ _start:
 
 .global boot_entry
 boot_entry:
-	/* setup stack at 512MB - safety gap*/
-	/* ALSO CHANGE THIS IN powerpc.lds */
-	LOAD_IMM64(%r1, 0x80000 - 0x100)
+	/*
+	 * setup stack with a safety gap, since we might write to the
+	 * previous frame.
+	 */
+	LOAD_IMM64(%r1, STACK_TOP - 0x100)
 	LOAD_IMM64(%r12, main)
 	mtctr	%r12,
 	bctrl
