@@ -58,6 +58,9 @@ _start:
 
 .global boot_entry
 boot_entry:
+	/* Save R3 to non-volatile register */
+	mr	%r14, %r3
+restart:
 	/*
 	 * setup stack with a safety gap, since we might write to the
 	 * previous frame.
@@ -66,7 +69,10 @@ boot_entry:
 	LOAD_IMM64(%r12, main)
 	mtctr	%r12
 	bctrl
-	b .
+
+	/* On exit, restart */
+	mr	%r3, %r14
+	b	restart
 
 #define EXCEPTION(nr)		\
 	.= nr			;\
