@@ -38,10 +38,20 @@
 
 	.section ".head","ax"
 
+/*
+ * Microwatt comes in at 0 as little endian so we do not need to worry up
+ * FIXUP_ENDIAN.
+ */
 	. = 0
 .global _start
 _start:
+	b	boot_entry
+
+	/* QEMU comes in at 0x10. Put a value in argc/r3 to distingush from
+	 * microwatt. */
+	. = 0x10
 	FIXUP_ENDIAN
+	LOAD_IMM64(%r3, 1)
 	b	boot_entry
 
 .global boot_entry
@@ -52,7 +62,6 @@ boot_entry:
 	LOAD_IMM64(%r12, main)
 	mtctr	%r12,
 	bctrl
-	bl mambo_terminate
 	b .
 
 #define EXCEPTION(nr)		\

@@ -36,8 +36,6 @@
 #include "py/mperrno.h"
 #include "lib/utils/pyexec.h"
 
-extern void mambo_terminate(void);
-
 void __stack_chk_fail(void);
 void __stack_chk_fail(void)
 {
@@ -54,7 +52,6 @@ void assert_fail(const char *msg)
 {
 	printf("Assert fail: %s\n", msg);
 
-	mambo_terminate();
 	for (;;) ;
 }
 
@@ -80,13 +77,15 @@ static char *stack_top;
 static char heap[2048*16];
 #endif
 
-extern void uart_init_ppc(int mambo);
+extern void uart_init_ppc(int qemu);
 
 int main(int argc, char **argv) {
     int stack_dummy;
     stack_top = (char*)&stack_dummy;
 
-    /* microwatt has argc/r3 = 0 where mambo will use skiboot so r3 = dt */
+    /*
+     * microwatt has argc/r3 = 0 whereas QEMU has r3 set in head.S
+     */
     uart_init_ppc(argc);
 //    printf("Hello World\n");
 
