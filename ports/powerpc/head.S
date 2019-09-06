@@ -100,8 +100,3 @@ boot_entry:
 	EXCEPTION(0x1400)
 	EXCEPTION(0x1500)
 	EXCEPTION(0x1600)
-
-.global stack
-stack_bottom:
-	.space	0x1000
-stack:
