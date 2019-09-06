@@ -34,6 +34,7 @@
 #include "py/repl.h"
 #include "py/gc.h"
 #include "py/mperrno.h"
+#include "py/stackctrl.h"
 #include "lib/utils/pyexec.h"
 
 void __stack_chk_fail(void);
@@ -93,6 +94,11 @@ int main(int argc, char **argv) {
     static mp_obj_t pystack[1024];
     mp_pystack_init(pystack, &pystack[1024]);
     #endif
+
+#if MICROPY_STACK_CHECK
+    mp_stack_ctrl_init();
+    mp_stack_set_limit(48*1024);
+#endif
 
 #if MICROPY_ENABLE_GC
     gc_init(heap, heap + sizeof(heap));
