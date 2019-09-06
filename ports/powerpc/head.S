@@ -64,7 +64,7 @@ boot_entry:
 	 */
 	LOAD_IMM64(%r1, STACK_TOP - 0x100)
 	LOAD_IMM64(%r12, main)
-	mtctr	%r12,
+	mtctr	%r12
 	bctrl
 	b .
 
