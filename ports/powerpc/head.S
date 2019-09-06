@@ -60,7 +60,7 @@ boot_entry:
 	/* ALSO CHANGE THIS IN powerpc.lds */
 	LOAD_IMM64(%r1, 0x80000 - 0x100)
 	LOAD_IMM64(%r12, main)
-	mtctr	%r12,
+	mtctr	%r12
 	bctrl
 	b .
 
