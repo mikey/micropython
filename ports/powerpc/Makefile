@@ -31,7 +31,6 @@ LIBS =
 
 SRC_C = \
 	main.c \
-	console.c \
 	uart_core.c \
 	lib/utils/printf.c \
 	lib/utils/stdout_helpers.c \
