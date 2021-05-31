@@ -28,6 +28,11 @@
 #include <stdbool.h>
 #include "py/mpconfig.h"
 
+extern int microwatt_console_poll(void);
+extern char microwatt_console_read(void);
+extern void microwatt_console_write(const char c);
+extern bool microwatt_console_active(void);
+
 /*
  * Core UART functions to implement for a port
  */
@@ -202,7 +207,7 @@ void uart_init_ppc(int qemu)
 {
 	qemu_console = qemu;
 
-	if (!qemu_console) {
+	if (!qemu_console  && !microwatt_console_active()) {
 		potato_console = 1;
 
 		potato_uart_base = UART_BASE;
@@ -225,6 +230,9 @@ int mp_hal_stdin_rx_chr(void) {
     } else if (potato_console) {
 	    while (potato_uart_rx_empty()) ;
 	    c = potato_uart_read();
+    } else {
+	    while (!microwatt_console_poll()) ;
+	    c = microwatt_console_read();
     }
 #endif
     return c;
@@ -248,6 +256,10 @@ void mp_hal_stdout_tx_strn(const char *str, mp_uint_t len) {
 		    while (potato_uart_tx_full());
 		    potato_uart_write(str[i]);
 	    }
+    } else {
+	    int i;
+	    for (i = 0; i < len; i++)
+		    microwatt_console_write(str[i]);
     }
 #endif
 }
